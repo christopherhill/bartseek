@@ -1,0 +1,12 @@
+ body {
+    background: url('../images/background.jpg') no-repeat;
+  }
+  .container {
+    background: #cdcdcd;
+  }
+  #main-container {
+    margin-top: 100px;
+  }
+  #main-table {
+    margin-top: 40px;
+  }

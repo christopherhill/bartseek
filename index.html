@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet">
+  <link href="styles/styles.css" rel="stylesheet">
+  <title>BartSeek: Real-time arrivals and departures wherever you are.</title>
+</head>
+
+<body>
+
+<nav class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">511 Trip Planner</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">BartSeek</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active" ng-click="getPosition()"><a href="#">Geolocate</a></li>
+        <li><a href="//www.bart.gov">Bart</a></li>
+        <li><a href="//www.511.org">511</a></li>
+      </ul>
+      </div>
+  </div>
+</nav>
+
+<div id="main-container" class="container">
+
+  <div ng-controller="bartSchedule">
+  
+    <h1>BartSeek</h1>
+    <h3>{{nearestBart.name}}</h3>    
+    <select ng-model="nearestBart.abbr" 
+            ng-selected="nearestBart.abbr"
+            ng-options="s.abbr as s.name for s in stations" 
+            ng-click="updateStation()" 
+            id="nearest-bart" class="form-control">
+    </select>
+    
+      <table id="main-table" class="table">
+
+        <tbody>
+          <tr ng-repeat="e in nearbyEvents">
+            <td class="lead">{{e.destination}}</td>
+            <td>
+              <table class="table table-striped">
+                <thead>
+                    <th>Direction</th>
+                    <th>Platform</th>
+                    <th>Minutes</th>
+                    <th>Bikes</th>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="d in e.estimate">
+                    <td>{{d.direction}}</td>
+                    <td>{{d.platform}}</td>
+                    <td class="info">{{d.minutes}}</td>
+                    <td><span ng-if="d.bikeflag">Yes</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+
+  </div>
+</div>
+
+<script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.9/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-route.min.js"></script>
+<script src="https://rawgithub.com/arunisrael/angularjs-geolocation/master/dist/angularjs-geolocation.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.0/js/bootstrap.min.js"></script>
+<script src="javascripts/main.js"></script>
+
+</body>
+</html>
