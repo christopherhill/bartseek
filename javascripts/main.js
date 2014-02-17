@@ -4,10 +4,8 @@ var BART_SERVICE_REAL_TIME_URL = "http://localhost:4567/bart/realtime";
 var App = angular.module('App', ['ngRoute', 'geolocation']);
 
 App.config(function($httpProvider) {
-    // Enable cross domain calls
-    $httpProvider.defaults.useXDomain = true;
-    // Remove the header used to identify ajax call that would prevent CORS from working
-    delete $httpProvider.defaults.headers.common['X-Requested-With'];
+  $httpProvider.defaults.useXDomain = true;
+  delete $httpProvider.defaults.headers.common['X-Requested-With'];
 });
 
 App.factory('bartEvents', function($http) {
@@ -42,45 +40,66 @@ App.controller('bartSchedule', ['$scope', '$http', 'bartStations', 'bartEvents',
   $scope.getNearestBart = function() {
     var smallestDistance = 0, smallestDistanceIndex = 0;
     for (var i = 0; i < $scope.stations.length; i++) {
-      // update the distance stored
       distance = getDistance($scope.stations[i].gtfs_latitude,
                              $scope.stations[i].gtfs_longitude,
                              $scope.position.latitude,
                              $scope.position.longitude)
-      $scope.stations[i].distance = distance; // add new val to array
+      $scope.stations[i].distance = distance;
       if (smallestDistance === 0) {
         smallestDistance = distance;
       } else {
         if (distance < smallestDistance) {
-         smallestDistance = distance;
-         smallestDistanceIndex = i;
+          smallestDistance = distance;
+          smallestDistanceIndex = i;
        }
       }
-      
     }
-    $scope.nearestBart = $scope.stations[smallestDistanceIndex];
-  };
 
-  $scope.updateStation = function() {
-    if ($scope.position.latitude != "" && $scope.position.longitude != "") {
-      bartStations.get(function(result) {
-        $scope.stations = result.root.stations.station;
-        $scope.getNearestBart();
-      });
-    }
+    $scope.selectedBart = $scope.stations[smallestDistanceIndex];
+    $scope.curSelect = $scope.selectedBart.abbr;
   };
+ 
+  $scope.loadStations = function() {
+    bartStations.get(function(result) {
+      $scope.stations = result.root.stations.station;
+    });
+  }
+
+  $scope.selectNewStation = function(value) {
+    $scope.selectedBart = searchObj(value, $scope.stations)
+  }
+
+  $scope.$watch('stations', function(newValue, oldValue) {
+    
+  });
 
   $scope.$watch('position', function(newValue, oldValue) {
-    $scope.updateStation();
+    if ($scope.stations !== undefined) 
+      $scope.getNearestBart();
   });
 
-  $scope.$watch('nearestBart', function(newValue, oldValue) {
-    bartEvents.get($scope.nearestBart.abbr, function(result) {
-      $scope.nearbyEvents = result.root.station.etd;
-    });
+  $scope.$watch('selectedBart', function(newValue, oldValue) {
+    if ($scope.selectedBart !== undefined) {
+      bartEvents.get($scope.selectedBart.abbr, function(result) {
+        $scope.nearbyEvents = result.root.station.etd;
+      });
+    }
   });
+
+  $scope.loadStations();
 
 }]);
+
+
+// Utilities
+
+function searchObj(nameKey, myObj){
+    for (var i = 0; i < myObj.length; i++) {
+        if (myObj[i].abbr === nameKey) {
+            return myObj[i];
+        }
+    }
+}
 
 if (typeof(Number.prototype.toRad) === "undefined") {
   Number.prototype.toRad = function() {

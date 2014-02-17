@@ -37,11 +37,10 @@
   <div ng-controller="bartSchedule">
   
     <h1>BartSeek</h1>
-    <h3>{{nearestBart.name}}</h3>    
-    <select ng-model="nearestBart.abbr" 
-            ng-selected="nearestBart.abbr"
+    <h3>{{selectedBart.name}}</h3>    
+    <select ng-model="curSelect" 
             ng-options="s.abbr as s.name for s in stations" 
-            ng-click="updateStation()" 
+            ng-change="selectNewStation(curSelect)" 
             id="nearest-bart" class="form-control">
     </select>
     
