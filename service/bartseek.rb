@@ -14,6 +14,8 @@ BART_SERVICE_REAL_TIME_URL = "http://api.bart.gov/api/etd.aspx"
 
 disable :protection
 set :protection, false
+set :environment, :production
+set :port, 4567
 
 get '/bart/stations' do
     @stations = HTTParty.get( BART_SERVICE_STATION_URL,

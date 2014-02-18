@@ -1,5 +1,5 @@
-var BART_SERVICE_STATION_URL = "http://localhost:4567/bart/stations";
-var BART_SERVICE_REAL_TIME_URL = "http://localhost:4567/bart/realtime";
+var BART_SERVICE_STATION_URL = "http://bartseek.com:4567/bart/stations";
+var BART_SERVICE_REAL_TIME_URL = "http://bartseek.com:4567/bart/realtime";
 
 var App = angular.module('App', ['ngRoute', 'geolocation']);
 
