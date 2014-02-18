@@ -74,7 +74,7 @@ App.controller('bartSchedule', ['$scope', '$http', 'bartStations', 'bartEvents',
   });
 
   $scope.$watch('position', function(newValue, oldValue) {
-    if ($scope.stations !== undefined) 
+    // if ($scope.stations !== undefined) 
       $scope.getNearestBart();
   });
 
