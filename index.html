@@ -14,7 +14,6 @@
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-        <span class="sr-only">511 Trip Planner</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -24,9 +23,9 @@
 
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="active" ng-click="getPosition()"><a href="#">Geolocate</a></li>
+        <li class="active" ng-click="updateLocation()"><a href="#"><i class="glyphicon glyphicon-map-marker"></i></a></li>
         <li><a href="//www.bart.gov">Bart</a></li>
-        <li><a href="//www.511.org">511</a></li>
+        <li><a href="//www.511.org">Trip Planner</a></li>
       </ul>
       </div>
   </div>
@@ -37,7 +36,12 @@
   <div ng-controller="bartSchedule">
   
     <h1>BartSeek</h1>
-    <h3>{{selectedBart.name}}</h3>    
+
+    <button class="btn btn-primary" ng-click="getNearestBart()">
+      <i class="glyphicon glyphicon-map-marker"></i>
+    </button>
+
+    <h3 ng-bind="selectedBart.name"></h3>    
     <select ng-model="curSelect" 
             ng-options="s.abbr as s.name for s in stations" 
             ng-change="selectNewStation(curSelect)" 
@@ -48,7 +52,7 @@
 
         <tbody>
           <tr ng-repeat="e in nearbyEvents">
-            <td class="lead">{{e.destination}}</td>
+            <td class="lead" ng-bind="e.destination"></td>
             <td>
               <table class="table table-striped">
                 <thead>
@@ -59,9 +63,9 @@
                 </thead>
                 <tbody>
                   <tr ng-repeat="d in e.estimate">
-                    <td>{{d.direction}}</td>
-                    <td>{{d.platform}}</td>
-                    <td class="info">{{d.minutes}}</td>
+                    <td ng-bind="d.direction"></td>
+                    <td ng-bind="d.platform"></td>
+                    <td ng-bind="d.minutes" class="info"></td>
                     <td><span ng-if="d.bikeflag">Yes</span></td>
                   </tr>
                 </tbody>
@@ -69,11 +73,22 @@
             </td>
           </tr>
         </tbody>
-
       </table>
-
   </div>
 </div>
+
+
+<div class="loader">
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+</div>
+
 
 <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.9/angular.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.13/angular-route.min.js"></script>

@@ -1,13 +1,84 @@
- body {
-    background: url('../images/background.jpg') no-repeat;
+body {
+  background: url('../images/background.jpg') no-repeat;
+}
+
+.container {
+  background: #cdcdcd;
+}
+
+#main-container {
+  margin-top: 100px;
+  margin-bottom: 100px;
+}
+
+#main-table {
+  margin-top: 40px;
+}
+
+.loader {
+  height: 100px; width: 100px;
+  top: 50%;
+  left: 50%;
+  margin-left: -50px;
+  margin-top: -50px;
+  /* margin: 50vh auto; */
+  position: absolute;
+}
+
+.loader > div {
+  width: 6px;
+  height: 20px;
+  position: absolute;
+  z-index: 1001;
+  left: -10px;
+  bottom: 15px;
+  border-radius: 5px;
+  -webkit-transform-origin: 10px 35px;
+  -webkit-transform: rotate(0deg);
+  -webkit-animation: loader 0.8s infinite;
+}
+
+.loader > div:nth-child(2) {
+  -webkit-transform: rotate(45deg);
+  -webkit-animation-delay: 0.1s;
+}
+.loader > div:nth-child(3) {
+  -webkit-transform: rotate(90deg);
+  -webkit-animation-delay: 0.2s;
+}
+.loader > div:nth-child(4) {
+  -webkit-transform: rotate(135deg);
+  -webkit-animation-delay: 0.3s;
+}
+.loader > div:nth-child(5) {
+  -webkit-transform: rotate(180deg);
+  -webkit-animation-delay: 0.4s;
+}
+.loader > div:nth-child(6) {
+  -webkit-transform: rotate(225deg);
+  -webkit-animation-delay: 0.5s;
+}
+.loader > div:nth-child(7) {
+  -webkit-transform: rotate(270deg);
+  -webkit-animation-delay: 0.6s;
+}
+.loader > div:nth-child(8) {
+  -webkit-transform: rotate(315deg);
+  -webkit-animation-delay: 0.7s;
+}
+
+@-webkit-keyframes loader {
+  0% {
+    background: transparent;
+    left: -10px;
+    -webkit-transform-origin: 10px 35px;
   }
-  .container {
-    background: #cdcdcd;
+  30% {
+    background: #fff;
   }
-  #main-container {
-    margin-top: 100px;
-    margin-bottom: 100px;
+  100% {
+    background: transparent;
+    left: 10px;
+    -webkit-transform-origin: -10px 35px;
   }
-  #main-table {
-    margin-top: 40px;
-  }
+}

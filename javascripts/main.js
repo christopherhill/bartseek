@@ -1,7 +1,29 @@
 var BART_SERVICE_STATION_URL = "http://bartseek.com:4567/bart/stations";
 var BART_SERVICE_REAL_TIME_URL = "http://bartseek.com:4567/bart/realtime";
 
-var App = angular.module('App', ['ngRoute', 'geolocation']);
+// for global AJAX spinner
+angular.module('sharedServices', [])
+    .config(function ($httpProvider) {
+        $httpProvider.responseInterceptors.push('myHttpInterceptor');
+        var spinnerFunction = function (data, headersGetter) {
+            $('.loader').fadeIn('slow');
+            return data;
+        };
+        $httpProvider.defaults.transformRequest.push(spinnerFunction);
+    })
+    .factory('myHttpInterceptor', function ($q, $window) {
+        return function (promise) {
+            return promise.then(function (response) {
+                $('.loader').fadeOut('slow');
+                return response;
+            }, function (response) {
+                $('.loader').fadeOut('slow');
+                return $q.reject(response);
+            });
+        };
+    });
+
+var App = angular.module('App', ['ngRoute', 'geolocation', 'sharedServices']);
 
 App.config(function($httpProvider) {
   $httpProvider.defaults.useXDomain = true;
@@ -33,11 +55,14 @@ App.factory('bartStations', function($http) {
 
 App.controller('bartSchedule', ['$scope', '$http', 'bartStations', 'bartEvents', 'geolocation', function($scope, $http, bartStations, bartEvents, geolocation) {
 
-  $scope.getPosition = geolocation.getLocation().then(function(data){
-    $scope.position = { latitude : data.coords.latitude, longitude : data.coords.longitude};
-  });
+  $scope.getPosition = function(callback) {
+    geolocation.getLocation().then(function(data){
+      $scope.position = { latitude : data.coords.latitude, longitude : data.coords.longitude};
+    }).then(callback);
+  };
 
   $scope.getNearestBart = function() {
+
     var smallestDistance = 0, smallestDistanceIndex = 0;
     for (var i = 0; i < $scope.stations.length; i++) {
       distance = getDistance($scope.stations[i].gtfs_latitude,
@@ -59,9 +84,10 @@ App.controller('bartSchedule', ['$scope', '$http', 'bartStations', 'bartEvents',
     $scope.curSelect = $scope.selectedBart.abbr;
   };
  
-  $scope.loadStations = function() {
+  $scope.loadStations = function(callback) {
     bartStations.get(function(result) {
       $scope.stations = result.root.stations.station;
+      callback.call();
     });
   }
 
@@ -69,13 +95,7 @@ App.controller('bartSchedule', ['$scope', '$http', 'bartStations', 'bartEvents',
     $scope.selectedBart = searchObj(value, $scope.stations)
   }
 
-  $scope.$watch('stations', function(newValue, oldValue) {
-    
-  });
-
   $scope.$watch('position', function(newValue, oldValue) {
-    // if ($scope.stations !== undefined) 
-      $scope.getNearestBart();
   });
 
   $scope.$watch('selectedBart', function(newValue, oldValue) {
@@ -86,7 +106,16 @@ App.controller('bartSchedule', ['$scope', '$http', 'bartStations', 'bartEvents',
     }
   });
 
-  $scope.loadStations();
+  $scope.updateLocation = function() {
+    $scope.getPosition($scope.loadStations($scope.getNearestBart)); 
+  }
+
+  // private init method
+  init = function() {
+    $scope.updateLocation();
+  }
+
+  init();
 
 }]);
 
