@@ -107,12 +107,14 @@ App.controller('bartSchedule', ['$scope', '$http', 'bartStations', 'bartEvents',
   });
 
   $scope.updateLocation = function() {
-    $scope.getPosition($scope.loadStations($scope.getNearestBart)); 
+    $scope.getPosition($scope.getNearestBart); 
   }
 
   // private init method
   init = function() {
-    $scope.updateLocation();
+    $scope.loadStations(function() {
+      $scope.updateLocation();  
+    });
   }
 
   init();
